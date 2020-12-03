@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper" :style="{background: color}">
     <div :class="[{'show':onFocus}, 'header']">
-      <div class="close-btn" @click="close"></div>
+      <div class="close-btn" @click="close()"></div>
     </div>
-
+    <div class="close-btn" @click="close()"></div>
     <quill-editor class="editor" ref="myTextEditor" v-model="content" :options="editorOption" @change="onEditorChange" ></quill-editor>
     <div class="toolbar-block" :class="[{'show': !onFocus}]"></div>
     <div id="toolbar">
@@ -112,7 +112,7 @@ export default {
     this.id = +this.$route.query.id
     this.uuid = this.$route.query.uuid
     this.color = decodeURIComponent(this.$route.query.color)
-    this.content = store.get('main')[this.uuid] || ''
+    this.content = store.get('main')[this.uuid] ? store.get('main')[this.uuid].content : ''
     this.localWindow = BrowserWindow.fromId(this.id);
     this.localWindow.on('focus', () => {
       this.onFocus = true;
@@ -136,6 +136,7 @@ export default {
     -webkit-app-region: drag;
     position: relative;
     visibility: hidden;
+    z-index: 6;
     &.show {
       visibility: visible;
     }
@@ -147,6 +148,8 @@ export default {
       position: absolute;
       top: 5px;
       left: 5px;
+      z-index: 777;
+      -webkit-app-region: no-drag;
     }
   }
   .editor {

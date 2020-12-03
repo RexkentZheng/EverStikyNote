@@ -61,7 +61,7 @@ export default {
 
       const modalPath = process.env.NODE_ENV === 'development'
       ? `http://localhost:8081/#/note?id=${childWindow.id}&uuid=${realUuid}&color=${encodeURIComponent(itemColor)}`
-      : `file://${__dirname}/index.html#note`
+      : `file://${__dirname}/index.html#note?id=${childWindow.id}&uuid=${realUuid}&color=${encodeURIComponent(itemColor)}`
 
       console.log(modalPath)
 
@@ -114,12 +114,13 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     .note-item {
-      width: 28%;
+      width: 32%;
       background: khaki;
       border-radius: 10px;
       padding: 15px;
       height: auto;
       margin-bottom: 10px;
+      box-sizing: border-box;
     } 
   }
 }
