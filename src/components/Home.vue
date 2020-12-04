@@ -1,29 +1,30 @@
 <template>
   <div class="wrapper">
-    <!-- <button @click="showWindow(null)">Come on111</button>
-    <button @click="showNote">Show Note</button> -->
-    <div class="add-btn" @click="showWindow(null)"></div>
-    <div v-html="note"></div>
-    <div class="note-list" >
-      <div
-        v-for="item in Object.keys(main)"
-        :key=item
-        class="note-item"
-        :style="{background: main[item].color}"
-        v-html="main[item].content"
-        @click="showWindow(item, main[item].color)"
-      ></div>
-    </div>
+    <waterfall :col='3' :data="Object.keys(main)"  >
+      <template >
+        <div class="add-note" @click="showWindow()">
+          <img src="../assets/icon/add.png" alt="">
+        </div>
+        <home-note
+          v-for="item in Object.keys(main)"
+          :key=item
+          :uuid=item
+          :note=main[item]
+          class="note-item"
+          @reload="reload"
+        />
+      </template>
+    </waterfall>
   </div>
 </template>
 
 <script>
-// import { BrowserWindow } from 'electron'
-const { BrowserWindow, screen } = require('electron').remote
+import HomeNote from '@/components/HomeNote'
+import { newWindow } from '@/utils/tools'
+const { BrowserWindow } = require('electron').remote
+
 const Store = require('electron-store');
 const store = new Store();
-import { v4 as uuidv4 } from 'uuid';
-import colors from '../utils/colors'
 
 export default {
   name: 'App',
@@ -31,65 +32,28 @@ export default {
     return {
       note: '',
       main: {},
-      window: null
+      window: null,
+      data: [],
     }
   },
   components: {
+    HomeNote,
   },
   methods: {
-    getRandomColor() {
-      return colors[parseInt(Math.random()*(colors.length+1),10)];
+    showWindow() {
+      newWindow()
     },
-    showWindow(uuid, color) {
-      const realUuid = uuid || uuidv4()
-      const newPosition =screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).bounds;
-      const itemColor = color || this.getRandomColor()
-
-      console.log(newPosition)
-      console.log(itemColor)
-      let childWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        x: newPosition.x + newPosition.width / 2 - 200,
-        y: newPosition.y + newPosition.height / 2 - 150,
-        webPreferences: {
-          nodeIntegration: true
-        },
-        frame: false,
-        vibrancy: 'popover',
-      });
-
-      const modalPath = process.env.NODE_ENV === 'development'
-      ? `http://localhost:8081/#/note?id=${childWindow.id}&uuid=${realUuid}&color=${encodeURIComponent(itemColor)}`
-      : `file://${__dirname}/index.html#note?id=${childWindow.id}&uuid=${realUuid}&color=${encodeURIComponent(itemColor)}`
-
-      console.log(modalPath)
-
-      childWindow.loadURL(modalPath)
-      
-      childWindow.show()
-
-      childWindow.on('closed', () => {
-        childWindow = null;
-      });
-      // setTimeout(() => {
-      //   childWindow.close()
-      // }, 10000)
-    },
-    showNote() {
-      this.note = store.get('aloha')
+    reload() {
       this.main = store.get('main')
-      console.log(store.get('main'))
-      console.log(this.note)
     }
   },
   mounted() {
     this.main = store.get('main')
+    console.log(this.main)
     const local = BrowserWindow.getFocusedWindow()
     local.on('focus', () => {
       this.main = store.get('main')
     })
-    console.log(local.id)
   }
 }
 </script>
@@ -97,9 +61,8 @@ export default {
 <style lang="less" scoped>
 .wrapper {
   background: ivory;
-  min-height: calc(100vh - 20px);
-  max-height: 600px;
   padding: 10px;
+  min-height: calc(100vh - 20px);
   .add-btn {
     width: 40px;
     height: 40px;
@@ -109,19 +72,20 @@ export default {
     right: 20px;
     top: 20px;
   }
-  .note-list {
+  .add-note {
+    height: 150px;
+    background: rgb(234, 234, 234);
+    padding: 15px;
+    box-sizing: border-box;
+    margin: 10px;
+    border-radius: 10px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .note-item {
-      width: 32%;
-      background: khaki;
-      border-radius: 10px;
-      padding: 15px;
-      height: auto;
-      margin-bottom: 10px;
-      box-sizing: border-box;
-    } 
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 50px;
+      height: 50px;
+    }
   }
 }
 </style>

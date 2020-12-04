@@ -1,6 +1,8 @@
 {
-  "name": "rz",
-  "version": "0.1.0",
+  "name": "EverStikyNote",
+  "version": "0.2.0",
+  "author": "RexkentZheng",
+  "description": "An Beautiful Note App",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -17,7 +19,8 @@
     "vue": "^2.6.12",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.4.9",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "vue-waterfall2": "^1.10.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

@@ -6,6 +6,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import VueQuillEditor from 'vue-quill-editor'
+import waterfall from 'vue-waterfall2'
 
 Vue.config.productionTip = false
 
@@ -15,6 +16,7 @@ import Home from './components/Home.vue'
 Vue.use(VueRouter);
 Vue.use(less);
 Vue.use(VueQuillEditor);
+Vue.use(waterfall)
 
 let router = new VueRouter({
   routes: [

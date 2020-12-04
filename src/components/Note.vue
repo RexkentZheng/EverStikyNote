@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper" :style="{background: color}">
     <div :class="[{'show':onFocus}, 'header']">
-      <div class="close-btn" @click="close()"></div>
+      <div class="header-btn close-btn" @click="close()"></div>
+      <div class="header-btn delete-btn" @click="remove()"></div>
     </div>
     <div class="close-btn" @click="close()"></div>
     <quill-editor class="editor" ref="myTextEditor" v-model="content" :options="editorOption" @change="onEditorChange" ></quill-editor>
@@ -96,6 +97,12 @@ export default {
     close() {
       this.localWindow.destroy()
     },
+    remove() {
+      let oldData = store.get('main') || {}
+      delete oldData[this.uuid]
+      store.set('main', oldData)
+      this.localWindow.destroy()
+    },
     onEditorChange({html }) {
       this.content = html;
       let oldData = store.get('main') || {}
@@ -140,16 +147,25 @@ export default {
     &.show {
       visibility: visible;
     }
+    .header-btn {
+      width: 15px;
+      height: 15px;
+      -webkit-app-region: no-drag;
+      z-index: 777;
+    }
     .close-btn {
-      width: 20px;
-      height: 20px;
       background: url('../assets/icon/close.png') no-repeat;
       background-size: 100%;
       position: absolute;
-      top: 5px;
-      left: 5px;
-      z-index: 777;
-      -webkit-app-region: no-drag;
+      top: 10px;
+      left: 10px;
+    }
+    .delete-btn {
+      background: url('../assets/icon/delete.png') no-repeat;
+      background-size: 100%;
+      position: absolute;
+      top: 10px;
+      right: 10px;
     }
   }
   .editor {
