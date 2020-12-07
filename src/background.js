@@ -72,7 +72,7 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  addMenu()
+  if(process.platform == 'darwin') addMenu()
   createWindow()
 })
 

@@ -49,7 +49,7 @@ export default {
     }
   },
   mounted() {
-    this.main = store.get('main')
+    this.main = store.get('main') || []
     const local = BrowserWindow.getFocusedWindow()
     local.on('focus', () => {
       this.main = store.get('main')
