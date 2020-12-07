@@ -7,6 +7,8 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import VueQuillEditor from 'vue-quill-editor'
 import waterfall from 'vue-waterfall2'
+import '@/assets/style/normalize.css'
+import '@/assets/style/global.css'
 
 Vue.config.productionTip = false
 

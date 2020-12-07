@@ -1,0 +1,8 @@
+@font-face{
+  font-family: normal;
+  src: url("./../fonts/default.ttf");
+}
+
+body {
+  font-family: normal;
+}

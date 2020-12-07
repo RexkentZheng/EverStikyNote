@@ -1,11 +1,18 @@
 <template>
-  <div class="home-note" v-html="note.content" :style="{background: note.color}" @click="showWindow(uuid, note.color)"></div>
+  <div
+    class="home-note-wrapper"
+    :style="{background: note.color === 'transparent' ? '#F0F0F0' : note.color }"
+    @click="showWindow(uuid, note.color)"
+  >
+    <p>{{ note.title }}</p>
+    <div v-html="note.content"></div>
+  </div>
 </template>
 
 <script>
 import { newWindow } from '@/utils/tools';
 
-const { Menu, MenuItem } = require('electron').remote;
+const { Menu, MenuItem, BrowserWindow } = require('electron').remote;
 const Store = require('electron-store');
 const store = new Store();
 
@@ -24,6 +31,7 @@ export default {
     return {
       menu: null,
       tmpUUID: '',
+      windowId: 0
     }
   },
   methods: {
@@ -48,7 +56,9 @@ export default {
       this.$emit('reload')
     },
     showWindow(uuid, color) {
-      newWindow(uuid, color);
+      const existWindow = BrowserWindow.fromId(this.windowId)
+      if (existWindow) return existWindow.show()
+      this.windowId = newWindow(uuid, color);
     },
   },
   mounted() {
@@ -58,9 +68,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.home-note {
+.home-note-wrapper {
   padding: 15px;
   margin: 10px;
   border-radius: 10px;
+  p {
+    padding: 0 0 10px 0;
+    margin: 0;
+    border-bottom: 1px solid #bfbfbf;
+    font-weight: 800;
+  }
 }
 </style>

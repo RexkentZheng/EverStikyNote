@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <waterfall :col='3' :data="Object.keys(main)"  >
+    <waterfall :col='col' :data="Object.keys(main)"  >
       <template >
         <div class="add-note" @click="showWindow()">
           <img src="../assets/icon/add.png" alt="">
@@ -34,6 +34,7 @@ export default {
       main: {},
       window: null,
       data: [],
+      col: 3,
     }
   },
   components: {
@@ -49,10 +50,12 @@ export default {
   },
   mounted() {
     this.main = store.get('main')
-    console.log(this.main)
     const local = BrowserWindow.getFocusedWindow()
     local.on('focus', () => {
       this.main = store.get('main')
+    })
+    local.on('resize', () => {
+      this.col = parseInt(local.getBounds().width / 300)
     })
   }
 }
@@ -60,7 +63,7 @@ export default {
 
 <style lang="less" scoped>
 .wrapper {
-  background: ivory;
+  background: #F8F8F8;
   padding: 10px;
   min-height: calc(100vh - 20px);
   .add-btn {

@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, Menu, MenuItem } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -15,6 +15,8 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    minWidth: 300,
+    minHeight: 300,
     webPreferences: {
       webPreferences: {webSecurity: false},
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -33,6 +35,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+}
+
+function addMenu() {
+  const menu = new Menu();
+  menu.append(new MenuItem({ label: '打开主页面', click() {
+    createWindow()
+  }}));
+  app.dock.setMenu(menu)
 }
 
 // Quit when all windows are closed.
@@ -62,6 +72,7 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+  addMenu()
   createWindow()
 })
 

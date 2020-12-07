@@ -1,9 +1,27 @@
 import { v4 as uuidv4 } from 'uuid';
-import colors from './colors'
 
 const { BrowserWindow, screen } = require('electron').remote
 
-export const getRandomColor = () => colors[parseInt(Math.random()*(colors.length+1),10)];
+/**
+ * @description: 将RGBA转化为16进制
+ * @param {[Array]} colors 长度为4的数组
+ * @return {String} 16进制的颜色表示方法
+ */
+const hexify = (colors) => {
+  const a = parseFloat(colors.pop());
+  const hexColors = colors.map((item) => {
+    const orginNum = Math.floor(a * parseInt(item) + (1 - a) * 255)
+    return `0${orginNum.toString(16)}`.slice(-2);
+  })
+  return `#${hexColors.join('')}`
+}
+
+const getRandomNum = (min, max) => Math.floor(Math.random()*(max-min+1)+min)
+
+export const getRandomColor = () => {
+  const colors = (new Array(3)).fill('').map(() => getRandomNum(128, 256)).concat([Math.random()])
+  return hexify(colors)
+}
 
 export const newWindow = (uuid, color) => {
   const realUuid = uuid || uuidv4()
@@ -18,6 +36,7 @@ export const newWindow = (uuid, color) => {
     webPreferences: {
       nodeIntegration: true
     },
+    transparent: true,
     frame: false,
     vibrancy: 'popover',
   });
@@ -33,4 +52,6 @@ export const newWindow = (uuid, color) => {
   childWindow.on('closed', () => {
     childWindow = null;
   });
+
+  return childWindow.id
 }
